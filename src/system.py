@@ -11,7 +11,7 @@ from constants import Mass
 from constants import Damping
 from constants import Stiffness
 
-class SystemMetaClass(metaclass = ABCMeta):
+class SystemMetaClass(metaclass=ABCMeta):
     @abstractmethod
     def mass(self):
         raise NotImplemented
