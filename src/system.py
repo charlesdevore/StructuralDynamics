@@ -66,12 +66,15 @@ class SDOF(System):
 
         return u0, v0
 
+    @abstractmethod
     def mass(self):
         return self._mass
 
+    @abstractmethod
     def damping(self):
         return self._damping
 
+    @abstractmethod
     def stiffness(self):
         return self._stiffness
     
@@ -103,8 +106,10 @@ class SDOFInitialConditions(InitialConditionsMetaClass):
         else:
             self._v0 = registry('0 m/s')
 
+    @abstractmethod
     def initial_displacement(self):
         return self._u0
 
+    @abstractmethod
     def initial_velocity(self):
         return self._v0
