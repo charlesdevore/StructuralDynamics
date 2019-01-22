@@ -29,15 +29,19 @@ class SystemMetaClass(metaclass=ABCMeta):
         raise NotImplemented
 
 class System(SystemMetaClass):
+    _registry = None
+    
     def registry(self):
         if not self._registry:
             self._registry = pint.UnitRegistry()
         return self._registry
     
-    def _process_constant(self, input_str, class_type):
-        registry = self.registry()
-        quantity = registry(input_str)
-        return class_type(registry, quantity)
+    def _process_constant(self, quantity, class_type):
+        if isinstance(quantity, class_type) and quantity._registry is self.registry():
+            return quantity
+        else:
+            registry = self.registry()
+            return class_type(registry, quantity)
                           
 
 class SDOF(System):
@@ -49,7 +53,7 @@ class SDOF(System):
         if initial_conditions:
             self._initial_conditions = initial_conditions
         else:
-            self._initial_conditions = SDOFInitialConditions(0, 0, registry)
+            self._initial_conditions = SDOFInitialConditions(None, None, self.registry())
 
         self._mass = self._process_constant(m, Mass)
         self._damping = self._process_constant(c, Damping)
@@ -83,19 +87,21 @@ class InitialConditionsMetaClass(metaclass = ABCMeta):
 
     
 class SDOFInitialConditions(InitialConditionsMetaClass):
+    _registry=None
+
     def __init__(self, u0, v0, registry):
 
         self._registry = registry
-
+        
         if u0:
-            self._u0 = self._registry(u0)
+            self._u0 = registry(u0)
         else:
-            self._u0 = self._registry('0 m')
+            self._u0 = registry('0 m')
 
         if v0:
-            self._v0 = self._registry(v0)
+            self._v0 = registry(v0)
         else:
-            self._v0 = self._registry('0 m/s')
+            self._v0 = registry('0 m/s')
 
     def initial_displacement(self):
         return self._u0

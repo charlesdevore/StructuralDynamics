@@ -20,6 +20,8 @@ class Constant(ConstantMetaClass):
         # check input
         if not (self._check_registry(registry)
                 and type(input_str) is str):
+            print('Registry: {}'.format(registry))
+            print('Input: {}'.format(input_str))
             raise InputError
         
         self._registry = registry
@@ -38,7 +40,7 @@ class Constant(ConstantMetaClass):
     #     return self._quantity + other._quantity
         
     def _check_registry(self, registry):
-        return type(registry) is pint.registry.UnitRegistry
+        return isinstance(registry, pint.registry.UnitRegistry)
         
     def to(self, unit_str):
         return self._quantity.to(unit_str).magnitude
