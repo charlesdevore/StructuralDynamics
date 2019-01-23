@@ -93,3 +93,43 @@ class Force(Constant):
         self._quantity = C._quantity
         self._registry = C._registry
 
+
+
+class Displacement(Constant):
+    def __init__(self, registry, input_str):
+        C = Constant(registry, input_str)
+
+        dimension = pint.unit.UnitsContainer({'[length]':1.0})
+        if not C._quantity.dimensionality == dimension:
+            raise InputError
+
+        self._quantity = C._quantity
+        self._registry = C._registry
+
+
+class Velocity(Constant):
+    def __init__(self, registry, input_str):
+        C = Constant(registry, input_str)
+
+        dimension = pint.unit.UnitsContainer({'[length]':1.0,
+                                              '[time]':-1.0})
+        if not C._quantity.dimensionality == dimension:
+            raise InputError
+
+        self._quantity = C._quantity
+        self._registry = C._registry
+
+
+class Acceleration(Constant):
+    def __init__(self, registry, input_str):
+        C = Constant(registry, input_str)
+
+        dimension = pint.unit.UnitsContainer({'[length]':1.0,
+                                              '[time]':-2.0})
+        if not C._quantity.dimensionality == dimension:
+            raise InputError
+
+        self._quantity = C._quantity
+        self._registry = C._registry
+
+
